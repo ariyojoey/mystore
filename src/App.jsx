@@ -4,7 +4,8 @@ import { Routes, Route, Link } from "react-router-dom";
 import './App.css'
 import HomePage from './Pages/homepage'
 import Products from './Pages/Products'
-import Cart from './Pages/Cart';
+import Cart from './Pages/Cart'
+import Checkout from './Pages/Checkout';
 
 function App() {
   const [count, setCount] = useState(0)

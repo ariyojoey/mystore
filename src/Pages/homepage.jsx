@@ -11,6 +11,7 @@ import Backpack from '../assets/06.png'
 import Joystick from '../assets/07.png'
 import Food from '../assets/08.png'
 import Handbag from '../assets/09.png'
+import { useNavigate } from 'react-router-dom'
 
 
 export   const items = [
@@ -80,9 +81,9 @@ export   const items = [
   ]
 
 const HomePage = () => {
-
+  let history = useNavigate()
   const itemsMap = items.map((e) => {
-    return <Card title={e.title} price={e.price} image={e.image} key={e.title}/>
+    return <Card title={e.title} price={e.price} image={e.image} key={e.title} onClick={() => history(`/products/${e.id}`)}/>
     })
   return (
     <div className='min-h-screen'>

@@ -2,7 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 import { toast } from "react-toastify";
 
 const initialState = {
-    items: [],
+    items: localStorage.getItem('items') ? JSON.parse(localStorage.getItem('items')) : [],
     qty: 0,
     totalAmount: 0
 }
@@ -26,6 +26,8 @@ const cartSlice = createSlice({
                     position: "bottom-left"
                 })
             }
+
+            localStorage.setItem("items", JSON.stringify(state.items))
         }
     }
 })

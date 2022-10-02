@@ -23,9 +23,7 @@ import { addToCart } from '../../cartSlice';
                     replace: true,
                     state: {}
                 })}/>
-                }))
-            console.log(items.filter((x) => `${x.id}` == params.id)[0])
-        }, [params.id])
+                }))}, [params.id])
            
     const dispatch = useDispatch()
     const handleAddToCart = (value) => {

@@ -18,7 +18,7 @@ export   const items = [
     {
         id: 1,
         image: Shirt,
-        price: '12.22',
+        price: '120.22',
         title: "Polo Shirt",
         description: "A classic polo shirt for all occasions. Playing golf? Pair it with some khakis. Preppy party? Pop that collar! Let your polo reflect your personality, so your brain doesn’t have to."
     },

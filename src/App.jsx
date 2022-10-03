@@ -1,17 +1,18 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import { Routes, Route, Link } from "react-router-dom";
+import React from "react";
+import { Routes, Route } from "react-router-dom";
 import './App.css'
+import 'react-toastify/dist/ReactToastify.css'
 import HomePage from './Pages/homepage'
 import Products from './Pages/Products'
 import Cart from './Pages/Cart'
 import Checkout from './Pages/Checkout';
+import { ToastContainer } from 'react-toastify';
 
 function App() {
-  const [count, setCount] = useState(0)
-
+ 
   return (
     <div className="App">
+      <ToastContainer/>
       <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/products/:id" element={<Products/>} />

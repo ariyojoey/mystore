@@ -1,18 +1,24 @@
-import React from "react";
+import React, {useEffect} from "react";
 import Header from "../components/header";
 import Footer from "../components/Footer";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { addToCart, clearCart, decreaseCart, removeFromCart } from "../../cartSlice";
+import { addToCart, clearCart, decreaseCart, getTotals, removeFromCart } from "../../cartSlice";
 import { confirmAlert } from 'react-confirm-alert'
 import 'react-confirm-alert/src/react-confirm-alert.css'
 
 
 function Cart() {
   const navigate = useNavigate()
-  const history = useNavigate();
+  const history = useNavigate()
   const dispatch = useDispatch()
+
   const cart = useSelector(state => state.cart)
+
+  useEffect(() => {
+    dispatch(getTotals())
+  }, [cart])
+  
   
   const handleDelete = (item) => {
     dispatch(removeFromCart(item))
@@ -30,7 +36,7 @@ function Cart() {
     dispatch(clearCart())
   }
 
-  const submit = () => {
+  const confirmClearCart = () => {
     confirmAlert({
       title: 'Confirm to submit',
       message: 'Are you sure you want to clear cart',
@@ -89,11 +95,11 @@ function Cart() {
           </div>))}
           <hr/>
           <div className="m-8 flex justify-between">
-            <button onClick={submit} className="font-bold bg-red-500 text-white rounded-lg p-2 hover:text-red-300">
+            <button onClick={confirmClearCart} className="font-bold bg-red-500 text-white rounded-lg p-2 hover:text-red-300">
               Clear Cart
             </button>
             <div className="cartTotal font-extrabold text-xl">
-              Total: {" "} ${}
+              Total: {" "} ${Math.trunc(cart.totalAmount * 100) / 100}
             </div>
           </div>
           <div className="flex items-center justify-center">

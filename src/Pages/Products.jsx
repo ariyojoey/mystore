@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import Header from '../components/header'
-import Footer from '../components/footer'
+import Footer from '../components/Footer'
 import { useParams, useNavigate } from "react-router-dom";
 import { items } from './homepage'
 import Card  from '../components/Card'

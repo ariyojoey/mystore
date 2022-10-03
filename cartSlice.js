@@ -15,7 +15,7 @@ const cartSlice = createSlice({
             const itemIndex = state.items.findIndex((item) => item.id === action.payload.id)
             if (itemIndex >= 0) {
                 state.items[itemIndex].cartQty += 1
-                toast.info(`Added Another ${action.payload.title} To Cart`, {
+                toast.info(`Added More ${action.payload.title} To Cart`, {
                     position: "bottom-left",
                     theme: "colored"
                 })
@@ -28,11 +28,33 @@ const cartSlice = createSlice({
             }
 
             localStorage.setItem("items", JSON.stringify(state.items))
+        },
+
+        decreaseCart(state, action){
+            const itemIndex = state.items.findIndex((item) => item.id === action.payload.id)
+            if (state.items[itemIndex].cartQty > 1) {
+                state.items[itemIndex].cartQty -= 1
+                toast.error(`Removed ${action.payload.title} from cart`, {
+                    position: "bottom-left"
+                })
+            } else if (state.items[itemIndex].cartQty === 1) {
+                toast.error(`You have one ${action.payload.title} left`, {
+                    position: "bottom-left"
+                })
+            }
+            localStorage.setItem("items", JSON.stringify(state.items))
+        },
+
+        removeFromCart(state, action) {
+          const remainingCartItems =  state.items.filter(item => item.id !== action.payload.id )
+          state.items = remainingCartItems
+
+          localStorage.setItem("items", JSON.stringify(state.items))
         }
     }
 })
 
 
-export const {addToCart} = cartSlice.actions
+export const {addToCart, decreaseCart, removeFromCart} = cartSlice.actions
 
 export default cartSlice.reducer

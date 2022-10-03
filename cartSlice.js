@@ -50,11 +50,17 @@ const cartSlice = createSlice({
           state.items = remainingCartItems
 
           localStorage.setItem("items", JSON.stringify(state.items))
+        },
+
+        clearCart(state, action) {
+            state.items = []
+            toast.done("Cart Cleared!")
+            localStorage.setItem("items", JSON.stringify(state.items))
         }
     }
 })
 
 
-export const {addToCart, decreaseCart, removeFromCart} = cartSlice.actions
+export const {addToCart, clearCart, decreaseCart, removeFromCart} = cartSlice.actions
 
 export default cartSlice.reducer

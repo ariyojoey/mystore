@@ -3,7 +3,10 @@ import Header from "../components/header";
 import Footer from "../components/Footer";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { addToCart, decreaseCart, removeFromCart } from "../../cartSlice";
+import { addToCart, clearCart, decreaseCart, removeFromCart } from "../../cartSlice";
+import { confirmAlert } from 'react-confirm-alert'
+import 'react-confirm-alert/src/react-confirm-alert.css'
+
 
 function Cart() {
   const navigate = useNavigate()
@@ -21,6 +24,27 @@ function Cart() {
 
   const handleDecrease = (item) => {
     dispatch(decreaseCart(item))
+  }
+
+  const handleClearCart = () => {
+    dispatch(clearCart())
+  }
+
+  const submit = () => {
+    confirmAlert({
+      title: 'Confirm to submit',
+      message: 'Are you sure you want to clear cart',
+      buttons: [
+        {
+          label: 'Yes',
+          onClick: () => handleClearCart()
+        },
+        {
+          label: 'No',
+
+        }
+      ]
+    })
   }
 
   return (
@@ -65,7 +89,7 @@ function Cart() {
           </div>))}
           <hr/>
           <div className="m-8 flex justify-between">
-            <button onClick={() => {}} className="font-bold bg-red-500 text-white rounded-lg p-2 hover:text-blue-800">
+            <button onClick={submit} className="font-bold bg-red-500 text-white rounded-lg p-2 hover:text-red-300">
               Clear Cart
             </button>
             <div className="cartTotal font-extrabold text-xl">

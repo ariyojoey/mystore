@@ -7,7 +7,6 @@ import Products from './Pages/Products'
 import Cart from './Pages/Cart'
 import Checkout from './Pages/Checkout';
 import { ToastContainer } from 'react-toastify';
-
 function App() {
  
   return (

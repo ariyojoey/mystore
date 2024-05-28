@@ -4,7 +4,7 @@ import { signUpUser, signInUser } from '../redux/userSlice';
 import { BiShow } from "react-icons/bi";
 import { BiHide } from "react-icons/bi";
 import { Link } from 'react-router-dom';
-import { toast } from 'react-toastify'
+import { toast } from 'react-toastify';
 
 export default function AuthForm({ authType }) {
   const [showPassword, setShowPassword] = useState(false);
@@ -18,7 +18,7 @@ export default function AuthForm({ authType }) {
 
 
   const dispatch = useDispatch();
-  const { isLoading, error } = useSelector((state) => state.user);
+  // const { isLoading, error } = useSelector((state) => state.user);
 
   const handleSubmit = async (e) => {
     e.preventDefault()

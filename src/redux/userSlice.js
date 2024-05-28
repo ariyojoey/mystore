@@ -1,9 +1,12 @@
-// features/user/userSlice.js
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 
 const baseUrl = 'http://localhost:5000'
+
+
+
+
 
 // Async thunk for user sign up
 export const signUpUser = createAsyncThunk(
@@ -19,6 +22,9 @@ export const signUpUser = createAsyncThunk(
   }
 );
 
+
+
+
 // Async thunk for user sign in
 export const signInUser = createAsyncThunk(
   'user/signInUser',
@@ -27,7 +33,8 @@ export const signInUser = createAsyncThunk(
       const response = await axios.post(`${baseUrl}/api/auth/sign-in`, { email, password });
       return response.data;
     } catch (error) {
-      return console.error(error);
+      toast.error(error.response?.data?.message)
+      return console.error('Sign In Error: ', error);
     }
   }
 );
@@ -45,6 +52,7 @@ const userSlice = createSlice({
       state.user = null;
       state.token = null;
       localStorage.removeItem('userToken');
+      window.location.href = '/';
     },
   },
   extraReducers: (builder) => {

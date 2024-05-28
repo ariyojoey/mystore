@@ -9,12 +9,13 @@ import { addToCart } from '../redux/cartSlice';
   
 
 
-    function Products() {
+ function Products() {
         const history = useNavigate();
         let params = useParams();
         const [value, setValue] = useState(null)
         const [map, setMap] = useState(null)
 
+        const user = localStorage.getItem('userToken')
 
         useEffect(() => {
             setValue(items.filter((x) => `${x.id}` == params.id)[0])
@@ -54,8 +55,9 @@ import { addToCart } from '../redux/cartSlice';
                             <span className="text-xs font-regular text-gray-800 font-bold dark:text-white">${value.price}</span>
                         </div>
                         <p> {value.description} </p>
-                        <button type="button" className="text-white bg-black hover:bg-black focus:ring-4 focus:ring-black-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-black-600 dark:hover:bg-black-700 focus:outline-none dark:focus:ring-black-800"
-                         onClick={() => handleAddToCart(value)}>Add to Cart</button>
+                        {user && <button type="button" className="text-white bg-black hover:bg-black focus:ring-4 focus:ring-black-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-black-600 dark:hover:bg-black-700 focus:outline-none dark:focus:ring-black-800"
+                         onClick={() => handleAddToCart(value)} disabled={!user}>Add to Cart</button>}
+                         {!user && <span className='pb-8 text-base text-gray-400 italic'>Login to add to cart</span>}
                     </div>
                     <div className='flex-1'>
                         <img src={value.image} style={{objectFit: 'contain'}}/>

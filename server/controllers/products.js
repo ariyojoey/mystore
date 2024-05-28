@@ -39,9 +39,9 @@ const getProduct = async (req, res) => {
 
 const createProduct = async (req, res) => {
     const product = req.body
-    
+    const image = req.file ? req.file.filename : ''
     try{
-        const newProduct = new Products({...product, createdAt: new Date().toISOString()})
+        const newProduct = new Products({...product, image, createdAt: new Date().toISOString()})
         const savedProduct = await newProduct.save()
         
         res.status(201).json({product:savedProduct, message: 'Product created!'})
@@ -53,7 +53,8 @@ const createProduct = async (req, res) => {
 
 const updateProduct = async (req, res) => {
     const { id } = req.params;
-    const {title, ...productData} = req.body;
+    const {title, description, price} = req.body;
+    const image = req.file ? req.file.filename : req.body.image; // Use the new image if uploaded, else keep the existing image
 
     try {
         // Check if the title already exists in another product
@@ -62,7 +63,7 @@ const updateProduct = async (req, res) => {
             return res.status(400).json({ message: "Title already exists" });
         }
 
-        const updatedProduct = await Products.findByIdAndUpdate(id, { $set: productData }, { new: true });
+        const updatedProduct = await Products.findByIdAndUpdate(id, { $set: { title, description, price, image } }, { new: true });
 
         if (!updatedProduct) {
             return res.status(404).json({ message: "Product not found" });

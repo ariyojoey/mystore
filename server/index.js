@@ -1,6 +1,7 @@
 const express = require('express')
 const mongoose = require('mongoose')
 const userRoutes = require('./routes/auth')
+const productRoutes = require('./routes/products')
 const bodyParser = require('body-parser')
 const cors = require('cors')
 const dotenv = require('dotenv')
@@ -27,11 +28,10 @@ app.get('/', (req, res) => {
 })
 
 app.use('/api/auth', userRoutes)
-
+app.use('/api/products', productRoutes)
 
 const CONNECTION_URL = process.env.CONNECTION_URL
 const PORT = process.env.PORT || 5000
-
 
 
 mongoose.connect(CONNECTION_URL)

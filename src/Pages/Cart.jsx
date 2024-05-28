@@ -3,7 +3,7 @@ import Header from "../components/header";
 import Footer from "../components/Footer";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { addToCart, clearCart, decreaseCart, getTotals, removeFromCart } from "../../cartSlice";
+import { addToCart, clearCart, decreaseCart, getTotals, removeFromCart } from "../redux/cartSlice";
 import { confirmAlert } from 'react-confirm-alert'
 import 'react-confirm-alert/src/react-confirm-alert.css'
 

@@ -26,7 +26,7 @@ app.get('/', (req, res) => {
     res.send("APP IS RUNNING")
 })
 
-app.use('/auth', userRoutes)
+app.use('/api/auth', userRoutes)
 
 
 const CONNECTION_URL = process.env.CONNECTION_URL

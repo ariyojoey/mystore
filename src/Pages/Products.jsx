@@ -5,7 +5,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { items } from './homepage'
 import Card  from '../components/Card'
 import { useDispatch } from 'react-redux';
-import { addToCart } from '../../cartSlice';
+import { addToCart } from '../redux/cartSlice';
   
 
 

@@ -3,7 +3,7 @@ import Header from '../components/header'
 import Footer from '../components/Footer'
 import { useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
-import {clearCart as clear} from '../../cartSlice.js'
+import {clearCart as clear} from '../redux/cartSlice.js'
 import { items } from './homepage'
 import { toast } from 'react-toastify'
 

@@ -8,18 +8,18 @@ import Checkout from "./Pages/Checkout";
 import Products from "./Pages/Products";
 import HomePage from "./Pages/homepage";
 import LoginPage from "./Pages/login";
-import SignupPage from "./Pages/signup";
+import SignUpPage from "./Pages/register";
 
 function App() {
   return (
     <div className="App">
       <ToastContainer />
       <Routes>
-        <Route path="/home" element={<HomePage />} />
+        <Route path="/" element={<HomePage />} />
         <Route path="/products/:id" element={<Products />} />
         <Route path="/cart" element={<Cart />} />
-        <Route path="/" element={<LoginPage />} />
-        <Route path="/signup" element={<SignupPage />} />
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/register" element={<SignUpPage />} />
         <Route path="/checkout" element={<Checkout />} />
       </Routes>
     </div>

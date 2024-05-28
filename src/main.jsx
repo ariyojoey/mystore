@@ -5,11 +5,13 @@ import { BrowserRouter } from "react-router-dom";
 import {Provider} from "react-redux"
 import App from './App'
 import './index.css'
-import cartReducer, { getTotals } from '../cartSlice';
+import cartReducer, { getTotals } from './redux/cartSlice';
+import userReducer from './redux/userSlice'
 
 const store = configureStore({
   reducer: {
-    cart: cartReducer
+    cart: cartReducer,
+    user: userReducer
   }
 })
 

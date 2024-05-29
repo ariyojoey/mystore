@@ -26,7 +26,7 @@ function Header() {
 
   const confirmLogout = () => {
     confirmAlert({
-      title: 'Confirm to submit',
+      title: '',
       message: 'You are about to logout',
       buttons: [
         {

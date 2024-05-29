@@ -2,14 +2,14 @@ import React, { useEffect, useState } from 'react'
 import Header from '../components/header'
 import Footer from '../components/Footer'
 import { useParams, useNavigate } from "react-router-dom";
-import { items } from './homepage'
 import Card  from '../components/Card'
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { addToCart } from '../redux/cartSlice';
-  
+import { baseUrl } from '../main';
 
 
  function Products() {
+        const { products } = useSelector((state) => state.products);
         const history = useNavigate();
         let params = useParams();
         const [value, setValue] = useState(null)
@@ -18,9 +18,9 @@ import { addToCart } from '../redux/cartSlice';
         const user = localStorage.getItem('userToken')
 
         useEffect(() => {
-            setValue(items.filter((x) => `${x.id}` == params.id)[0])
-            setMap(items.filter((x) => `${x.id}` != params.id).slice(0, 3).map((e) => {
-                return <Card title={e.title} price={e.price} image={e.image} key={e.title} onClick={() => history(`/products/${e.id}`, {
+            setValue(products.filter((x) => `${x._id}` == params.id)[0])
+            setMap(products.filter((x) => `${x._id}` != params.id).slice(0, 3).map((e) => {
+                return <Card title={e.title} price={e.price} image={e.image} key={e.title} onClick={() => history(`/products/${e._id}`, {
                     replace: true,
                     state: {}
                 })}/>
@@ -60,7 +60,7 @@ import { addToCart } from '../redux/cartSlice';
                          {!user && <span className='pb-8 text-base text-gray-400 italic'>Login to add to cart</span>}
                     </div>
                     <div className='flex-1'>
-                        <img src={value.image} style={{objectFit: 'contain'}}/>
+                        <img src={baseUrl+'/uploads/'+value.image} style={{objectFit: 'contain'}}/>
                     </div>
                 </div>
                 

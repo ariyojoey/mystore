@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { signUpUser, signInUser } from '../redux/userSlice';
 import { BiShow } from "react-icons/bi";
 import { BiHide } from "react-icons/bi";

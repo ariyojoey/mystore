@@ -1,8 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 import { toast } from 'react-toastify';
-
-const baseUrl = 'http://localhost:5000'
+import { baseUrl } from '../main';
 
 
 

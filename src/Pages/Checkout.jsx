@@ -4,13 +4,14 @@ import Footer from '../components/Footer'
 import { useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import {clearCart as clear} from '../redux/cartSlice.js'
-import { items } from './homepage'
+import { baseUrl } from '../main';
 import { toast } from 'react-toastify'
 
 function Checkout() {
   const history = useNavigate()
   const dispatch = useDispatch()
   const cart = useSelector(state => state.cart)
+
 
   let clearCart = () => {
     toast.success(`Thanks for shopping with us`, {
@@ -23,9 +24,6 @@ function Checkout() {
     dispatch(clear())
   }
 
-  useEffect(() => {
-    console.log(cart)
-  }, [])
 
   return (
     <div>
@@ -54,18 +52,18 @@ function Checkout() {
         </tr>
     </thead>
     <tbody>
-        {cart.items?.map((e) => (<tr class="bg-white dark:bg-gray-800">
-        <th scope="row" class="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-            <img src={e.image} height={80} width={50} />
+        {cart.items?.map((item) => (<tr key={item._id} className="bg-white dark:bg-gray-800">
+        <th scope="row" className="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+            <img src={baseUrl+'/uploads/'+item.image} height={80} width={50} />
         </th>
-        <td class="py-4 px-6">
-            {e.title}
+        <td className="py-4 px-6">
+            {item.title}
         </td>
-        <td class="py-4 px-6">
-            {e.cartQty}
+        <td className="py-4 px-6">
+            {item.cartQty}
         </td>
-        <td class="py-4 px-6">
-            ${e.price}
+        <td className="py-4 px-6">
+            ${item.price}
         </td>
     </tr>))}
     </tbody>

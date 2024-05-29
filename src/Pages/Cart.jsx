@@ -3,9 +3,10 @@ import Header from "../components/header";
 import Footer from "../components/Footer";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { addToCart, clearCart, decreaseCart, getTotals, removeFromCart } from "../../cartSlice";
+import { addToCart, clearCart, decreaseCart, getTotals, removeFromCart } from "../redux/cartSlice";
 import { confirmAlert } from 'react-confirm-alert'
 import 'react-confirm-alert/src/react-confirm-alert.css'
+import { baseUrl } from '../main';
 
 
 function Cart() {
@@ -53,6 +54,8 @@ function Cart() {
     })
   }
 
+  console.log(cart)
+
   return (
     <div>
       <Header />
@@ -73,10 +76,10 @@ function Cart() {
       </button>
         </div>) 
         : <div className="cartItems">
-          {cart.items?.map((item) => (<div key={item.id} className="cartItem">
+          {cart.items?.map((item) => (<div key={item._id} className="cartItem">
               <div className="cartProduct flex items-center justify-between m-4">
                 <div className="container flex items-center  mx-8">
-                  <img width={80} height={50} src={item.image} alt={item.title} />
+                  <img width={80} height={50} src={baseUrl+'/uploads/'+item.image} alt={item.title} />
                   <h3 className=" mx-2 font-bold">{item.title}</h3>
                 </div>
                 <div className=" hidden md:container md:flex ">

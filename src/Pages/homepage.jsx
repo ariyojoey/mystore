@@ -1,111 +1,54 @@
-import React from "react";
-import Shirt from "../assets/01.png";
-import Headphones from "../assets/02.png";
-import Glasses from "../assets/03.png";
-import Boots from "../assets/04.png";
-import Ticket from "../assets/05.png";
-import Backpack from "../assets/06.png";
-import Joystick from "../assets/07.png";
-import Food from "../assets/08.png";
-import Handbag from "../assets/09.png";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchProducts } from "../redux/productSlice";
 import Card from "../components/Card";
 import Footer from "../components/Footer";
 import Header from "../components/header";
 import { useNavigate } from "react-router-dom";
 
-export const items = [
-  {
-    id: 1,
-    image: Shirt,
-    price: "120.22",
-    title: "Polo Shirt",
-    description:
-      "A classic polo shirt for all occasions. Playing golf? Pair it with some khakis. Preppy party? Pop that collar! Let your polo reflect your personality, so your brain doesn’t have to.",
-  },
-  {
-    id: 2,
-    image: Headphones,
-    price: "999.99",
-    title: "Headphones",
-    description:
-      "Audio perfection, award-winning noise cancellation, and a design as sleek as a sports car. Don’t be fooled by the price, these are the best headphones on the market—guaranteed!",
-  },
-  {
-    id: 3,
-    image: Glasses,
-    price: "999.99",
-    title: "Sunglasses",
-    description:
-      "Surf, sand, and sunglasses: summertime perfection. These aviator sunnies protect your precious peepers from hazardous UV rays, day or night. Bonus: they make you look kinda cool.",
-  },
-  {
-    id: 4,
-    image: Boots,
-    price: "999.99",
-    title: "HBoots",
-    description:
-      "These boots fall above the ankle, so you don’t need to buy those no-show half socks that constantly fall off your heels. We think these boots are waterproof, but please let us know.",
-  },
-  {
-    id: 5,
-    image: Ticket,
-    price: "999.99",
-    title: "Tickets",
-    description:
-      "A generic ticket to an unspecified event on either May 10 or October 5 (depending on which side of the pond you hail from). One seat only, one night only. No refunds, no regrets.",
-  },
-  {
-    id: 6,
-    image: Backpack,
-    price: "999.99",
-    title: "Backpack",
-    description:
-      "Also called a backsack, knapsack, rucksack, or packsack, this is the preferred load-carrying method of hikers and students. We think these ones are waterproof, but please let us know.",
-  },
-  {
-    id: 7,
-    image: Joystick,
-    price: "999.99",
-    title: "Joypad",
-    description:
-      "Maybe you need this device for your existing gaming console. Maybe you just want to pretend you’ve got a gaming console. We’re not here to judge! Buy, and you shall receive joy.",
-  },
-  {
-    id: 8,
-    image: Food,
-    price: "999.99",
-    title: "Food Delivery",
-    description:
-      "Just like your school cafeteria’s menu in the last few days before summer break, this “manager’s special” mealbox is a mystery. On the plus side, we’ll deliver it right to your doorstep.",
-  },
-  {
-    id: 9,
-    image: Handbag,
-    price: "499.99",
-    title: "Handbag",
-    description:
-      "The dorsal fin of an orca whale. An actual oil slick. The earthly manifestation of a black hole. Nighttime with pockets. Vantablack lining. The world’s most elusive handbag",
-  },
-];
+
 
 const HomePage = () => {
-  let history = useNavigate();
-  const itemsMap = items.map((e) => {
-    return (
-      <Card
-        title={e.title}
-        price={e.price}
-        image={e.image}
-        key={e.title}
-        onClick={() => history(`/products/${e.id}`)}
-      />
-    );
-  });
+  const dispatch = useDispatch();
+  const { products, loading } = useSelector((state) => state.products);
+
+  useEffect(() => {
+    const fetchProductsAsync = async () => {
+        const items = dispatch(fetchProducts());
+        return items
+    };
+    fetchProductsAsync();
+}, [dispatch]);
+
+  const navigate = useNavigate();
+  
+  
   return (
+    loading ? 
+    <div role="status" className="flex justify-center items-center text-center w-full h-screen">
+      <svg aria-hidden="true" class="inline w-28 h-28 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="currentColor"/>
+        <path d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z" fill="currentFill"/>
+      </svg>
+      <span class="sr-only">Loading...</span>
+    </div>
+    :
     <div className="min-h-screen">
       <Header />
       <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 px-8 md:px-12 lg:px-16 gap-6 mt-5">
-        {itemsMap}
+        {
+          products.map((item) => {
+            return (
+              <Card
+                title={item.title}
+                price={item.price}
+                image={item.image}
+                key={item.title}
+                onClick={() => navigate(`/products/${item._id}`)}
+              />
+            );
+          })
+        }
       </div>
       <Footer />
     </div>

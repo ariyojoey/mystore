@@ -2,24 +2,25 @@ import React, { useEffect, useState } from 'react'
 import Header from '../components/header'
 import Footer from '../components/Footer'
 import { useParams, useNavigate } from "react-router-dom";
-import { items } from './homepage'
 import Card  from '../components/Card'
-import { useDispatch } from 'react-redux';
-import { addToCart } from '../../cartSlice';
-  
+import { useDispatch, useSelector } from 'react-redux';
+import { addToCart } from '../redux/cartSlice';
+import { baseUrl } from '../main';
 
 
-    function Products() {
+ function Products() {
+        const { products } = useSelector((state) => state.products);
         const history = useNavigate();
         let params = useParams();
         const [value, setValue] = useState(null)
         const [map, setMap] = useState(null)
 
+        const user = localStorage.getItem('userToken')
 
         useEffect(() => {
-            setValue(items.filter((x) => `${x.id}` == params.id)[0])
-            setMap(items.filter((x) => `${x.id}` != params.id).slice(0, 3).map((e) => {
-                return <Card title={e.title} price={e.price} image={e.image} key={e.title} onClick={() => history(`/products/${e.id}`, {
+            setValue(products.filter((x) => `${x._id}` == params.id)[0])
+            setMap(products.filter((x) => `${x._id}` != params.id).slice(0, 3).map((e) => {
+                return <Card title={e.title} price={e.price} image={e.image} key={e.title} onClick={() => history(`/products/${e._id}`, {
                     replace: true,
                     state: {}
                 })}/>
@@ -54,11 +55,12 @@ import { addToCart } from '../../cartSlice';
                             <span className="text-xs font-regular text-gray-800 font-bold dark:text-white">${value.price}</span>
                         </div>
                         <p> {value.description} </p>
-                        <button type="button" className="text-white bg-black hover:bg-black focus:ring-4 focus:ring-black-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-black-600 dark:hover:bg-black-700 focus:outline-none dark:focus:ring-black-800"
-                         onClick={() => handleAddToCart(value)}>Add to Cart</button>
+                        {user && <button type="button" className="text-white bg-black hover:bg-black focus:ring-4 focus:ring-black-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-black-600 dark:hover:bg-black-700 focus:outline-none dark:focus:ring-black-800"
+                         onClick={() => handleAddToCart(value)} disabled={!user}>Add to Cart</button>}
+                         {!user && <span className='pb-8 text-base text-gray-400 italic'>Login to add to cart</span>}
                     </div>
                     <div className='flex-1'>
-                        <img src={value.image} style={{objectFit: 'contain'}}/>
+                        <img src={baseUrl+'/uploads/'+value.image} style={{objectFit: 'contain'}}/>
                     </div>
                 </div>
                 

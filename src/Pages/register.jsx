@@ -1,10 +1,10 @@
 import React from 'react'
 import AuthForm from './AuthForm'
 
-export default function login() {
+export default function register() {
   return (
     <section className='flex-center size-full'>
-      <AuthForm authType='SignIn' />
+        <AuthForm authType='SignUp' />
     </section>
   )
 }

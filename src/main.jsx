@@ -8,6 +8,7 @@ import "./index.css";
 import cartReducer, { getTotals } from "./redux/cartSlice";
 import userReducer from "./redux/userSlice";
 import productsReducer from "./redux/productSlice";
+import ordersReducer from "./redux/orderSlice";
 
 export const baseUrl = 'https://m-store-server.onrender.com'
 
@@ -15,7 +16,8 @@ const store = configureStore({
   reducer: {
     cart: cartReducer,
     user: userReducer,
-    products: productsReducer
+    products: productsReducer,
+    orders: ordersReducer
   },
 });
 

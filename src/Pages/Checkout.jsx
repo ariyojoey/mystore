@@ -8,7 +8,7 @@ import { baseUrl } from '../main';
 import { toast } from 'react-toastify'
 
 function Checkout() {
-  const history = useNavigate()
+  const navigate = useNavigate()
   const dispatch = useDispatch()
   const cart = useSelector(state => state.cart)
 
@@ -77,8 +77,20 @@ function Checkout() {
     </tfoot>
 </table>
 </div>
-    <button type="button" className="text-white bg-black hover:bg-black-800 focus:ring-4 focus:ring-black-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-black-600 dark:hover:bg-black-700 focus:outline-none mx-9 dark:focus:ring-black-800" onClick={() => {clearCart(); history('/')}}> Thanks </button>
-    <Footer />
+{/* <div className='flex justify-center items-center p-4 m-4'>
+    <p className=''>
+        Total: {" "} ${Math.trunc(cart.totalAmount * 100) / 100}
+    </p>
+    <button type="button" className="text-white bg-black hover:bg-black-800 focus:ring-4 focus:ring-black-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-black-600 dark:hover:bg-black-700 focus:outline-none mx-6 dark:focus:ring-black-800" 
+    onClick={() => {navigate('/pay')}}> 
+        Pay 
+    </button>
+</div> */}
+<button type="button" className="text-white bg-black hover:bg-black-800 focus:ring-4 focus:ring-black-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-black-600 dark:hover:bg-black-700 focus:outline-none mx-9 dark:focus:ring-black-800" 
+ onClick={() => {clearCart(); navigate('/')}}> 
+    Thanks 
+</button>
+<Footer />
       
     </div>
   )

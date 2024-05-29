@@ -79,7 +79,7 @@ function Cart() {
               <div className="flex justify-between m-4">
                 <div className="flex w-1/2 md:w-1/3 items-center">
                   <img width={80} height={50} src={baseUrl+'/uploads/'+item.image} alt={item.title} />
-                  <h3 className="mx-2 font-bold">{item.title}</h3>
+                  <h3 className="md:mx-2 font-bold">{item.title}</h3>
                 </div>
                 <div className="hidden md:w-1/3 md:flex items-center justify-center text-center">
                   <button onClick={() => handleDecrease(item)}>-</button>
@@ -96,11 +96,11 @@ function Cart() {
               <hr/>
           </div>))}
           <hr/>
-          <div className="m-10 flex justify-between">
+          <div className="m-10 flex justify-between items-center">
             <button onClick={confirmClearCart} className="font-bold bg-red-500 text-white rounded-lg p-2 hover:text-red-300">
               Clear Cart
             </button>
-            <div className="font-extrabold text-xl">
+            <div className="font-extrabold text-lg md:text-xl">
               Total: {" "} ${Math.trunc(cart.totalAmount * 100) / 100}
             </div>
           </div>

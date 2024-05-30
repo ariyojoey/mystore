@@ -51,7 +51,7 @@ function Products() {
       );
     }
   }, [params.id, products, navigate]);
-  console.log(products);
+  
 
   const handleAddToCart = (value) => {
     dispatch(addToCart(value));

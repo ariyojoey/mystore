@@ -2,9 +2,37 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import { baseUrl } from '../main';
+import { jwtDecode } from "jwt-decode";
 
 
+const initialState = {
+  user: localStorage.getItem('userToken') || null,
+  token: null,
+  isLoading: false,
+  error: null,
+}
 
+export const loadUserFromLocalStorage = createAsyncThunk(
+  'user/loadUserFromLocalStorage',
+  async (_, { rejectWithValue }) => {
+    try {
+      const token = localStorage.getItem('userToken');
+      if (!token) return rejectWithValue('No token found');
+
+      const decodedToken = jwtDecode(token);
+      const user = {
+        email: decodedToken.email,
+        id: decodedToken._id,
+        firstName: decodedToken.firstName,
+        lastName: decodedToken.lastName,
+      };
+      
+      return user;
+    } catch (error) {
+      return rejectWithValue('Failed to load user from localStorage');
+    }
+  }
+);
 
 
 // Async thunk for user sign up
@@ -40,12 +68,7 @@ export const signInUser = createAsyncThunk(
 
 const userSlice = createSlice({
   name: 'user',
-  initialState: {
-    user: null,
-    token: null,
-    isLoading: false,
-    error: null,
-  },
+  initialState: initialState,
   reducers: {
     logout: (state) => {
       state.user = null;
@@ -87,7 +110,13 @@ const userSlice = createSlice({
       .addCase(signInUser.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.payload;
-      });
+      })
+      .addCase(loadUserFromLocalStorage.fulfilled, (state, action) => {
+        state.user = action.payload;
+      })
+      .addCase(loadUserFromLocalStorage.rejected, (state, action) => {
+        state.error = action.payload;
+      })
   },
 });
 

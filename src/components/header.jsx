@@ -7,13 +7,16 @@ import shopCart from "../assets/shopping-cart.svg";
 import { logout } from "../redux/userSlice"
 import { confirmAlert } from 'react-confirm-alert'
 import { clearCart } from "../redux/cartSlice";
+import { loadUserFromLocalStorage } from "../redux/userSlice.js";
 
 function Header() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const cart = useSelector((state) => state.cart);
+
   useEffect(() => {
+    dispatch(loadUserFromLocalStorage());
     dispatch(getTotals());
   }, [cart, dispatch]);
 

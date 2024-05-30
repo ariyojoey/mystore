@@ -25,7 +25,7 @@ function Checkout() {
   return (
     <div>
       <Header />
-      <h1 className="text-center m-3">
+      <h1 className="text-center m-3 text-lg">
         <strong> Checkout </strong>
       </h1>
       <hr />
@@ -63,7 +63,7 @@ function Checkout() {
                 </th>
                 <td className="hidden md:block py-4 px-6">{item.title}</td>
                 <td className="py-4 px-6">{item.cartQty}</td>
-                <td className="py-4 px-6">${item.price}</td>
+                <td className="py-4 px-6">£{item.price?.toFixed(2)}</td>
               </tr>
             ))}
           </tbody>

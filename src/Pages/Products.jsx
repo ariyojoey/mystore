@@ -125,7 +125,7 @@ function Products() {
               </div>
               <div className="flex justify-between items-center">
                 <span className="text-xs font-regular text-gray-800 font-bold dark:text-white">
-                  ${value.price}
+                  £{value.price?.toFixed(2)}
                 </span>
               </div>
               <p> {value.description} </p>

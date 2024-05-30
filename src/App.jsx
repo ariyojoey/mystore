@@ -12,7 +12,7 @@ import SignUpPage from "./Pages/register";
 
 function App() {
   return (
-    <div className="App">
+    <div className="App container px-4 overflow-hidden">
       <ToastContainer />
       <Routes>
         <Route path="/" element={<HomePage />} />

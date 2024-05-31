@@ -5,7 +5,7 @@ import { clearCart as clear } from "../redux/cartSlice.js";
 import { baseUrl } from "../main";
 import { toast } from "react-toastify";
 import { createOrder } from "../redux/orderSlice";
-import { PaystackButton } from "react-paystack";
+import { usePaystackPayment } from "react-paystack";
 
 function Checkout() {
   const navigate = useNavigate();
@@ -50,6 +50,13 @@ function Checkout() {
     publicKey: import.meta.env.VITE_PAYSTACK_PUBLIC_KEY,
   };
 
+  const initializePayment = usePaystackPayment(config);
+
+  const handlePayment = () => {
+    initializePayment(handlePaystackSuccessAction, handlePaystackCloseAction);
+};
+
+  
   const handleSubmit = (e) => {
     e.preventDefault();
   };
@@ -64,9 +71,10 @@ function Checkout() {
     });
     dispatch(clear());
   };
+  
 
   return (
-    <div>
+    <div className="p-2">
       <h1 className="text-center m-3 text-lg md:text-xl font-bold font-sans">
         Checkout
       </h1>
@@ -123,9 +131,9 @@ function Checkout() {
         </table>
       </div>
 
-      <form onSubmit={handleSubmit}>
-        <div className="space-y-6 w-full flex flex-col md:justify-center md:items-center dark:bg-gray-900 dark:text-gray-400 p-2 pb-4 text-gray-700">
-          <div className="flex items-center justify-center pt-6">
+      <form onSubmit={handleSubmit} className="border rounded-lg shadow dark:bg-gray-900 dark:text-gray-400 mt-6">
+        <div className="space-y-6 w-full flex flex-col md:justify-center md:items-center p-4 text-gray-700">
+          <div className="flex items-center justify-center">
             <h2 className="text-semibold text-gray-500 text-lg font-serif">
               Fill form to complete order
             </h2>
@@ -239,7 +247,7 @@ function Checkout() {
                   value={city}
                   onChange={(e) => setCity(e.target.value)}
                   required
-                  className="block w-full md:w-[166px] lg:w-[333px] rounded-md border-0 py-1.5 text-gray-500 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset placeholder:p-2 focus:ring-sky-600 sm:text-sm sm:leading-6"
+                  className="block w-full md:w-[166px] lg:w-[333px] rounded-md border-0 p-2 py-1.5 text-gray-500 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset placeholder:p-2 focus:ring-sky-600 sm:text-sm sm:leading-6"
                 />
               </div>
             </div>
@@ -261,7 +269,7 @@ function Checkout() {
                   value={state}
                   onChange={(e) => setState(e.target.value)}
                   required
-                  className="block w-full md:w-[166px] lg:w-[333px] rounded-md border-0 py-1.5 text-gray-500 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset placeholder:p-2 focus:ring-sky-600 sm:text-sm sm:leading-6"
+                  className="block w-full md:w-[166px] lg:w-[333px] rounded-md border-0 p-2 py-1.5 text-gray-500 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset placeholder:p-2 focus:ring-sky-600 sm:text-sm sm:leading-6"
                 />
               </div>
             </div>
@@ -283,7 +291,7 @@ function Checkout() {
                   value={postCode}
                   onChange={(e) => setPostCode(e.target.value)}
                   required
-                  className="block w-full md:w-[166px] lg:w-[333px] rounded-md border-0 py-1.5 text-gray-500 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset placeholder:p-2 focus:ring-sky-600 sm:text-sm sm:leading-6"
+                  className="block w-full md:w-[166px] lg:w-[333px] rounded-md border-0 p-2 py-1.5 text-gray-500 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset placeholder:p-2 focus:ring-sky-600 sm:text-sm sm:leading-6"
                 />
               </div>
             </div>
@@ -291,13 +299,16 @@ function Checkout() {
         </div>
 
         <div className="p-4 flex flex-col md:flex-row justify-center items-center space-y-1">
-          <PaystackButton
-            className="text-white w-[50%] md:w-[15%] bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-black-300 font-medium rounded-lg text-sm py-2.5 mr-2 dark:bg-black-600 dark:hover:bg-black-700 focus:outline-none mx-9 dark:focus:ring-black-800"
-            text="Pay with paystack"
+          <button
+            className="text-white w-[50%] md:w-[15%] bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-black-300 font-medium rounded-lg text-sm py-2.5 mr-2 dark:bg-black-600 dark:hover:bg-black-700 focus:outline-none mx-9 dark:focus:ring-black-800 disabled:bg-gray-400"
             {...config}
-            onSuccess={handlePaystackSuccessAction}
-            onClose={handlePaystackCloseAction}
-          />
+            onClick={handlePayment}
+            disabled={
+                !email || !address || !phone || !postCode || !state || !city
+              }
+          >
+            Pay with paystack
+          </button>
 
           <button
             type="button"

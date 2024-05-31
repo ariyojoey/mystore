@@ -9,7 +9,7 @@ const Card = ({title, price, image, onClick}) => {
             <img src={baseUrl+'/uploads/'+image} />
             <div className='flex flex-col items-center'>
                 <p className='font-semibold'>{ title }</p>
-                <p className='text-xs font-regular text-gray-400'>${ price }</p>
+                <p className='text-xs font-regular text-gray-400 pt-2'>${ price }</p>
             </div>
         </div>
     </div>

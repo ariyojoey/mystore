@@ -1,10 +1,12 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import axios from "axios";
 import { toast } from "react-toastify";
-import { baseUrl } from "../main";
+import axiosInstance from "../utils/axiosInstance"
+
 
 const initialState = {
-  user: localStorage.getItem("userToken") || null,
+  user: localStorage.getItem("userToken") ? JSON.stringify(localStorage.getItem("userToken")).user : null,
+  accessToken: localStorage.getItem("userToken") ? JSON.stringify(localStorage.getItem("userToken")).accessToken : null,
+  refreshToken: localStorage.getItem("userToken") ? JSON.stringify(localStorage.getItem("userToken")).refreshToken : null,
   token: null,
   isLoading: false,
   error: null,
@@ -14,10 +16,10 @@ export const loadUserFromLocalStorage = createAsyncThunk(
   "user/loadUserFromLocalStorage",
   async (_, { rejectWithValue }) => {
     try {
-      const token = localStorage.getItem("userToken");
+      const token = JSON.parse(localStorage.getItem('userToken')).refreshToken;
       if (!token) return rejectWithValue("No token found");
 
-      const response = await axios.get(`${baseUrl}/api/auth/me`, {
+      const response = await axiosInstance.get(`/api/auth/me`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -30,12 +32,30 @@ export const loadUserFromLocalStorage = createAsyncThunk(
   }
 );
 
+// Refresh token thunk
+export const refreshTokens = createAsyncThunk(
+  "user/refreshToken",
+  async (_, { getState, rejectWithValue }) => {
+    const refreshToken = JSON.parse(localStorage.getItem('userToken')).refreshToken;
+    console.log("Refresh token: " + refreshToken)
+    try {
+      const response = await axiosInstance.post(`/api/auth/refresh-token`, { token: refreshToken });
+      return response.data;
+    } catch (error) {
+      console.error(error)
+      toast.error(error.response?.data?.message);
+      console.error("Refresh Token Error: ", error);
+      return rejectWithValue("Failed to refresh token");
+    }
+  }
+);
+
 // Async thunk for user sign up
 export const signUpUser = createAsyncThunk(
   "user/signUpUser",
   async ({ email, password, confirmPassword, firstName, lastName }) => {
     try {
-      const response = await axios.post(`${baseUrl}/api/auth/sign-up`, {
+      const response = await axiosInstance.post(`/api/auth/sign-up`, {
         email,
         password,
         confirmPassword,
@@ -55,7 +75,7 @@ export const signInUser = createAsyncThunk(
   "user/signInUser",
   async ({ email, password }) => {
     try {
-      const response = await axios.post(`${baseUrl}/api/auth/sign-in`, {
+      const response = await axiosInstance.post(`/api/auth/sign-in`, {
         email,
         password,
       });
@@ -73,7 +93,8 @@ const userSlice = createSlice({
   reducers: {
     logout: (state) => {
       state.user = null;
-      state.token = null;
+      state.accessToken = null;
+      state.refreshToken = null;
       localStorage.removeItem("userToken");
       window.location.href = "/";
     },
@@ -88,7 +109,7 @@ const userSlice = createSlice({
         state.isLoading = false;
         state.user = action.payload.result;
         state.token = action.payload.token;
-        localStorage.setItem("userToken", action.payload.token);
+        localStorage.setItem("userToken", JSON.stringify({ user: action.payload.result, accessToken: action.payload.accessToken, refreshToken: action.payload.refreshToken }));
 
         window.location.href = "/";
       })
@@ -104,19 +125,24 @@ const userSlice = createSlice({
         state.isLoading = false;
         state.user = action.payload.result;
         state.token = action.payload.token;
-        localStorage.setItem("userToken", action.payload.token);
-
+        localStorage.setItem("userToken", JSON.stringify({ user: action.payload.result, accessToken: action.payload.accessToken, refreshToken: action.payload.refreshToken }));
         window.location.href = "/";
       })
       .addCase(signInUser.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.payload;
       })
-      .addCase(loadUserFromLocalStorage.fulfilled, (state, action) => {
-        state.user = action.payload;
+      .addCase(refreshTokens.fulfilled, (state, action) => {
+        state.accessToken = action.payload.accessToken;
+        localStorage.setItem("userToken", JSON.stringify({ ...state, accessToken: action.payload.accessToken }));
       })
-      .addCase(loadUserFromLocalStorage.rejected, (state, action) => {
+      .addCase(refreshTokens.rejected, (state, action) => {
         state.error = action.payload;
+        state.user = null;
+        state.accessToken = null;
+        state.refreshToken = null;
+        localStorage.removeItem("userToken");
+        window.location.href = "/";
       });
   },
 });

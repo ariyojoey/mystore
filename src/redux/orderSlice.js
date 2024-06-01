@@ -1,25 +1,40 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import axios from 'axios';
-import { baseUrl } from '../main';
+import axiosInstance from "../utils/axiosInstance";
+import { refreshTokens } from './userSlice';
+
+const getTokenFromLocalStorage = () => {
+    const userToken = JSON.parse(localStorage.getItem('userToken'));
+    return userToken ? userToken.refreshToken : null;
+};
 
 export const createOrder = createAsyncThunk(
     'orders/createOrder',
-    async (orderData, { getState }) => {
-        const { token } = getState().auth;
-        const response = await axios.post(`${baseUrl}/api/orders`, orderData, {
+    async (orderData, { getState, dispatch }) => {
+       try {
+        const token = JSON.parse(localStorage.getItem('userToken')).refreshToken;
+        if (!token) {
+            console.error('No refresh token found');
+        }
+        const response = await axiosInstance.post(`/api/orders`, orderData, {
             headers: {
                 Authorization: `Bearer ${token}`
             }
         });
         return response.data;
+       } catch (error) {
+        if (error.response?.status === 401) {
+            await dispatch(refreshTokens());
+            return createOrder(orderData, { getState, dispatch });
+        }
+       }
     }
 );
 
 export const getOrder = createAsyncThunk(
     'orders/getOrder',
     async (orderId, { getState }) => {
-        const { token } = getState().auth;
-        const response = await axios.get(`${baseUrl}/api/orders/${orderId}`, {
+        const token = getTokenFromLocalStorage();
+        const response = await axiosInstance.get(`/api/orders/${orderId}`, {
             headers: {
                 Authorization: `Bearer ${token}`
             }
@@ -31,8 +46,8 @@ export const getOrder = createAsyncThunk(
 export const getAllOrders = createAsyncThunk(
     'orders/getAllOrders',
     async (_, { getState }) => {
-        const { token } = getState().auth;
-        const response = await axios.get(`${baseUrl}/api/orders/`, {
+        const token = getTokenFromLocalStorage();
+        const response = await axiosInstance.get(`/api/orders/`, {
             headers: {
                 Authorization: `Bearer ${token}`
             }
@@ -44,8 +59,8 @@ export const getAllOrders = createAsyncThunk(
 export const editOrder = createAsyncThunk(
     'orders/editOrder',
     async ({ id, orderData }, { getState }) => {
-        const { token } = getState().auth;
-        const response = await axios.put(`${baseUrl}/api/orders/${id}`, orderData, {
+        const token = getTokenFromLocalStorage();
+        const response = await axiosInstance.put(`/api/orders/${id}`, orderData, {
             headers: {
                 Authorization: `Bearer ${token}`
             }
@@ -57,8 +72,8 @@ export const editOrder = createAsyncThunk(
 export const updateOrderStatus = createAsyncThunk(
     'orders/updateOrderStatus',
     async ({ id, status }, { getState }) => {
-        const { token } = getState().auth;
-        const response = await axios.put(`${baseUrl}/api/orders/${id}`, { status }, {
+        const token = getTokenFromLocalStorage();
+        const response = await axiosInstance.put(`/api/orders/${id}`, { status }, {
             headers: {
                 Authorization: `Bearer ${token}`
             }
@@ -70,8 +85,8 @@ export const updateOrderStatus = createAsyncThunk(
 export const deleteOrder = createAsyncThunk(
     'orders/deleteOrder',
     async (orderId, { getState }) => {
-        const { token } = getState().auth;
-        const response = await axios.delete(`${baseUrl}/api/orders/${orderId}`, {
+        const token = JSON.parse(localStorage.getItem('userToken')).refreshToken;;
+        const response = await axiosInstance.delete(`/api/orders/${orderId}`, {
             headers: {
                 Authorization: `Bearer ${token}`
             }
@@ -95,7 +110,7 @@ const orderSlice = createSlice({
             })
             .addCase(createOrder.fulfilled, (state, action) => {
                 state.status = 'succeeded';
-                state.orders.push(action.payload.order);
+                state.orders.push(action.payload.order); 
             })
             .addCase(createOrder.rejected, (state, action) => {
                 state.status = 'failed';

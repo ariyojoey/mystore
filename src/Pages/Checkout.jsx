@@ -6,33 +6,42 @@ import { baseUrl } from "../main";
 import { toast } from "react-toastify";
 import { createOrder } from "../redux/orderSlice";
 import { usePaystackPayment } from "react-paystack";
+import { logout } from "../redux/userSlice.js";
 
 function Checkout() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const cart = useSelector((state) => state.cart);
-  const { user } = useSelector((state) => state.user);
 
-  const [email, setEmail] = useState("");
+  const user = JSON.parse(localStorage.getItem('userToken')).user
+
+  const [email, setEmail] = useState(user.email);
   const [address, setAddress] = useState("");
   const [address2, setAddress2] = useState("");
-  const [phone, setPhone] = useState();
+  const [phone, setPhone] = useState("");
   const [postCode, setPostCode] = useState("");
   const [state, setState] = useState("");
   const [city, setCity] = useState("");
 
+  let orderData = {
+    user: user._id,
+    items: cart?.items.map((item) => ({
+      product: item._id,
+      quantity: item.cartQty,
+    })),
+    totalAmount: Number(cart.totalAmount),
+    status: "Completed",
+    delivery: {
+        address, 
+        address2,
+        phone,
+        postCode,
+        city,
+        state,
+    }
+  };
   const handlePaymentSuccess = async (reference) => {
-    const orderData = {
-      user: user?._id,
-      items: cart?.items.map((item) => ({
-        product: item._id,
-        quantity: item.cartQty,
-      })),
-      totalAmount: Number(cart.totalAmount),
-      paymentReference: reference,
-      status: "Completed",
-    };
-
+    orderData = { ...orderData, paymentReference: reference };
     dispatch(createOrder(orderData));
   };
 
@@ -54,11 +63,6 @@ function Checkout() {
 
   const handlePayment = () => {
     initializePayment(handlePaystackSuccessAction, handlePaystackCloseAction);
-};
-
-  
-  const handleSubmit = (e) => {
-    e.preventDefault();
   };
 
   let clearCart = () => {
@@ -71,7 +75,19 @@ function Checkout() {
     });
     dispatch(clear());
   };
-  
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    dispatch(createOrder(orderData))
+      .then(() => {
+        clearCart();
+        navigate("/");
+      })
+      .catch((error) => {
+        console.error(error)
+        toast.error("Error creating order: " + error.message);
+      });
+  };
 
   return (
     <div className="p-2">
@@ -131,7 +147,10 @@ function Checkout() {
         </table>
       </div>
 
-      <form onSubmit={handleSubmit} className="border rounded-lg shadow dark:bg-gray-900 dark:text-gray-400 mt-6">
+      <form
+        onSubmit={handleSubmit}
+        className="border rounded-lg shadow dark:bg-gray-900 dark:text-gray-400 mt-6"
+      >
         <div className="space-y-6 w-full flex flex-col md:justify-center md:items-center p-4 text-gray-700">
           <div className="flex items-center justify-center">
             <h2 className="text-semibold text-gray-500 text-lg font-serif">
@@ -304,22 +323,18 @@ function Checkout() {
             {...config}
             onClick={handlePayment}
             disabled={
-                !email || !address || !phone || !postCode || !state || !city
-              }
+              !email || !address || !phone || !postCode || !state || !city
+            }
           >
             Pay with paystack
           </button>
 
           <button
-            type="button"
+            type="submit"
             disabled={
               !email || !address || !phone || !postCode || !state || !city
             }
             className="text-white w-[50%] md:w-[15%] bg-black hover:bg-black-800 focus:ring-4 focus:ring-black-300 font-medium rounded-lg text-sm py-2.5 mr-2 dark:bg-black-600 dark:hover:bg-black-700 focus:outline-none mx-9 dark:focus:ring-black-800 disabled:bg-gray-400"
-            onClick={() => {
-              clearCart();
-              navigate("/");
-            }}
           >
             Pay
           </button>

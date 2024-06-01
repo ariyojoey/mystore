@@ -12,7 +12,7 @@ import ordersReducer from "./redux/orderSlice";
 
 export const baseUrl = 'https://m-store-server.onrender.com'
 
-const store = configureStore({
+export const store = configureStore({
   reducer: {
     cart: cartReducer,
     user: userReducer,

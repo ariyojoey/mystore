@@ -148,7 +148,7 @@ function Checkout() {
       </div>
 
       <form
-        
+        onSubmit={handlePayment}
         className="border rounded-lg shadow dark:bg-gray-900 dark:text-gray-400 mt-6"
       >
         <div className="space-y-6 w-full flex flex-col md:justify-center md:items-center p-4 text-gray-700">

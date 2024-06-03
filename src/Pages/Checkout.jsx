@@ -317,15 +317,15 @@ function Checkout() {
           </div>
         </div>
 
-        <div className="p-4 flex flex-col md:flex-row justify-center items-center space-y-1">
+      {/*   <div className="p-4 flex flex-col md:flex-row justify-center items-center space-y-1">
           <PaystackButton
             text="Pay with paystack" 
             className="text-white w-[50%] md:w-[15%] bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-black-300 font-medium rounded-lg text-sm py-2.5 mr-2 dark:bg-black-600 dark:hover:bg-black-700 focus:outline-none mx-9 dark:focus:ring-black-800 disabled:bg-gray-400"
             {...config}
             onClick={handlePayment}
           />
-          
-          {/* <button
+          */}
+          <button
             className="text-white w-[50%] md:w-[15%] bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-black-300 font-medium rounded-lg text-sm py-2.5 mr-2 dark:bg-black-600 dark:hover:bg-black-700 focus:outline-none mx-9 dark:focus:ring-black-800 disabled:bg-gray-400"
             {...config}
             onClick={handlePayment}
@@ -334,7 +334,7 @@ function Checkout() {
             }
           >
             Pay with paystack
-          </button> */}
+          </button> 
 
           {/* <button
             type="submit"

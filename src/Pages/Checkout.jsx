@@ -5,7 +5,7 @@ import { clearCart as clear } from "../redux/cartSlice.js";
 import { baseUrl } from "../main";
 import { toast } from "react-toastify";
 import { createOrder } from "../redux/orderSlice";
-import { usePaystackPayment, PaystackButton } from "react-paystack";
+import { usePaystackPayment } from "react-paystack";
 import { logout } from "../redux/userSlice.js";
 
 function Checkout() {
@@ -13,7 +13,7 @@ function Checkout() {
   const dispatch = useDispatch();
   const cart = useSelector((state) => state.cart);
 
-  const user = JSON.parse(localStorage.getItem('userToken')).user
+  const user = JSON.parse(localStorage.getItem("userToken")).user;
 
   const [email, setEmail] = useState(user.email);
   const [address, setAddress] = useState("");
@@ -32,13 +32,14 @@ function Checkout() {
     totalAmount: Number(cart.totalAmount),
     status: "Completed",
     delivery: {
-        address, 
-        address2,
-        phone,
-        postCode,
-        city,
-        state,
-    }
+      address,
+      address2,
+      phone,
+      postCode,
+      city,
+      state,
+    },
+    reference: "",
   };
   const handlePaymentSuccess = async (reference) => {
     orderData = { ...orderData, paymentReference: reference };
@@ -46,6 +47,7 @@ function Checkout() {
   };
 
   const handlePaystackSuccessAction = (reference) => {
+    orderData.reference = reference.reference;
     handlePaymentSuccess(reference.reference);
   };
 
@@ -78,6 +80,15 @@ function Checkout() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    dispatch(createOrder(orderData))
+      .then(() => {
+        clearCart();
+        navigate("/");
+      })
+      .catch((error) => {
+        console.error(error);
+        toast.error("Error creating order: " + error.message);
+      });
   };
 
   return (
@@ -307,37 +318,30 @@ function Checkout() {
             </div>
           </div>
         </div>
-
-        <div className="p-4 flex flex-col md:flex-row justify-center items-center space-y-1">
-         {/*  <PaystackButton
-            text="Pay with paystack" 
-            className="text-white w-[50%] md:w-[15%] bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-black-300 font-medium rounded-lg text-sm py-2.5 mr-2 dark:bg-black-600 dark:hover:bg-black-700 focus:outline-none mx-9 dark:focus:ring-black-800 disabled:bg-gray-400"
-            {...config}
-            onClick={handlePayment}
-          />
-          */}
-          <button
-            className="text-white w-[50%] md:w-[15%] bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-black-300 font-medium rounded-lg text-sm py-2.5 mr-2 dark:bg-black-600 dark:hover:bg-black-700 focus:outline-none mx-9 dark:focus:ring-black-800 disabled:bg-gray-400"
-            {...config}
-            onClick={handlePayment}
-            disabled={
-              !email || !address || !phone || !postCode || !state || !city
-            }
-          >
-            Pay with paystack
-          </button> 
-
-          {/* <button
-            type="submit"
-            disabled={
-              !email || !address || !phone || !postCode || !state || !city
-            }
-            className="text-white w-[50%] md:w-[15%] bg-black hover:bg-black-800 focus:ring-4 focus:ring-black-300 font-medium rounded-lg text-sm py-2.5 mr-2 dark:bg-black-600 dark:hover:bg-black-700 focus:outline-none mx-9 dark:focus:ring-black-800 disabled:bg-gray-400"
-          >
-            Pay
-          </button> */}
-        </div>
       </form>
+      <div className="p-4 flex flex-col md:flex-row  items-center justify-center space-y-2">
+        <button
+          className="text-white w-[50%] md:w-[15%] bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-black-300 font-medium rounded-lg text-sm py-2.5 dark:bg-black-600 dark:hover:bg-black-700 focus:outline-none mx-9 mt-2 dark:focus:ring-black-800 disabled:bg-gray-400"
+          {...config}
+          onClick={handlePayment}
+          disabled={
+            !email || !address || !phone || !postCode || !state || !city
+          }
+        >
+          Pay with paystack
+        </button>
+
+        <button
+          type="submit"
+          disabled={
+            !email || !address || !phone || !postCode || !state || !city
+          }
+          onClick={handleSubmit}
+          className="text-white w-[50%] md:w-[15%] bg-black hover:bg-black-800 focus:ring-4 focus:ring-black-300 font-medium rounded-lg text-sm py-2.5 dark:bg-black-600 dark:hover:bg-black-700 focus:outline-none mx-9 dark:focus:ring-black-800 disabled:bg-gray-400"
+        >
+          Pay
+        </button>
+      </div>
     </div>
   );
 }
